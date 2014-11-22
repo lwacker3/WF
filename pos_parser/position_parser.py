@@ -2,8 +2,7 @@ import sys
 import re
 import os
 import csv
-from xlrd import open_workbook, empty_cell
-from xlwt import Workbook
+
 
 from openpyxl import Workbook as wb
 from openpyxl.cell import get_column_letter
