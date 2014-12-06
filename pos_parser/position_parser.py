@@ -73,7 +73,8 @@ def reformat_position_amount(position_amount):
 def get_global_contracts(): 
 	today =  date.today()
 	# plus one because the current month's contract is not active 
-	month = today.month + 1
+#	month = today.month + 1
+	month = today.month
 	day = today.day
 	year = today.year - 2000
 	if day < 5: 
@@ -88,6 +89,7 @@ def get_global_contracts():
 		year_str = str(year)
 		month_list.append(month_str + year_str)
 		iterator +=1
+
 	return month_list
 
 # gets most recent statement in the directory. 
@@ -288,27 +290,23 @@ def create_trading_sheet(positions, global_workbook):
 	trade_sheet.cell('%s%s' % ('D',1)).value = 'SILV 647'
 	trade_sheet.cell('%s%s' % ('E',1)).value = 'EURO 647'
 
-
-	# trade_sheet.write('A', 1, "Contract")
-	# trade_sheet.write('B', 2, "GOLD, 646")
-	# trade_sheet.write('C', 3, "EURO, 646")
-	# trade_sheet.write('D', 4, "SILV, 647")
-	# trade_sheet.write('E', 5, "EURO, 647")
-	
 	def contract_iterate(positions, column_number):
 
+		
 		trade_sheet.cell('%s%s' % ('A',1)).value = 'Contract'
 		column_letter = get_letter_val_openpyxl(column_number)
+		
 		pos_counter = 0 
 		global_counter = 1
 		position_length = len(positions)
 	#loop to iterate over the positions
 		while (global_counter < len(global_contracts)):
+			
 			if pos_counter < position_length:
 				position = positions[pos_counter]
 				pos_contract = position[0]
 				pos_amount = position[2]
-				contract = global_contracts[global_counter]
+				contract = global_contracts[global_counter-1]
 
 				if (contract== pos_contract):
 				#write the contract label col. (+1 because of the heading) 
@@ -342,6 +340,7 @@ def create_trading_sheet(positions, global_workbook):
 	silver_positions = positions[account_2_number]['SILVER']
 	euro2_positions = positions[account_2_number]['EURO']
 		
+
 	contract_iterate(gold_positions, 2)
 	contract_iterate(euro1_positions, 3)
 	contract_iterate(silver_positions,4)
@@ -364,9 +363,7 @@ def create_reference_sheet(positions, global_workbook):
 			letter = get_letter_val_openpyxl(column)
 			reference_sheet.cell('%s%s'%(letter, 1)).value = account
 			
-			#reference_sheet.write(0, column, account)
-			print column
-			print "before 2nd for loop"
+
 			for c_type, pos_list in commodities.items(): 
 				letter = get_letter_val_openpyxl(column)
 				reference_sheet.cell('%s%s' % (letter,2)).value =  c_type
